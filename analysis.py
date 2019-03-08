@@ -1,5 +1,5 @@
-from __future__ import print_function
 import sys
+import sqlite3
 import jieba.analyse
 from wordcloud import WordCloud
 from PIL import Image
@@ -52,9 +52,20 @@ def extract_keywords():
 	allow_pos = ('nr',)  # 词性
 	tags = jieba.analyse.extract_tags(preprocessing(), 2000, withWeight=True)
 	keywords = dict()
+	conn = sqlite3.connect('WordFrequency.db')
+	db = conn.cursor()
+	db.execute('''create table if not exists WordFrequency
+			(id integer primary key autoincrement,
+			word text, 
+			frequency float)''')
 	for i in tags:
 		print("%s\t\t%f" % (i[0], i[1]))
+		word = i[0]
+		frequency = float(i[1])
+		db.execute('''insert into WordFrequency(word, frequency)  values(?,?)''', (word, frequency))
 		keywords[i[0]] = i[1]
+	conn.commit()
+	conn.close()
 	return keywords
 
 def draw_wordcloud():
@@ -77,8 +88,8 @@ def draw_wordcloud():
 	# 显示图片
 #	plt.figure()
 #	plt.imshow(wc)
-	plt.axis("off")
-	plt.show()
+#	plt.axis("off")
+#	plt.show()
 	# 保存到本地
 	wc.to_file("wordcloud.jpg")
 

@@ -7,4 +7,5 @@ $python3 analysis.py input.txt
 ```
 
 ## Reference
- -[TextCharactervVisualization@github](https://github.com/maoqyhz/TextCharactervVisualization.git)
+
+ - [TextCharactervVisualization@github](https://github.com/maoqyhz/TextCharactervVisualization.git)
