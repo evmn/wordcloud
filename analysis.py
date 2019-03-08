@@ -4,12 +4,13 @@ import jieba.analyse
 from wordcloud import WordCloud
 from PIL import Image
 import numpy as np
-import matplotlib
-matplotlib.use('agg')
+#import matplotlib
+#matplotlib.use('agg')
 import matplotlib.pyplot as plt
+import random
 #jieba.load_userdict("namedict.txt")
 # 设置相关的文件路径
-bg_image_path = "bg.jpg"
+bg_image_path = "bg.png"
 text_path = sys.argv[1]# first argument if input file
 font_path = 'font.ttf'
 stopwords_path = 'stopwords.txt'
@@ -86,12 +87,19 @@ def draw_wordcloud():
 	# 根据频率生成词云
 	wc.generate_from_frequencies(extract_keywords())
 	# 显示图片
-#	plt.figure()
-#	plt.imshow(wc)
-#	plt.axis("off")
-#	plt.show()
+	plt.figure()
+	plt.imshow(wc.recolor(color_func=color_setting, random_state=3), interpolation="bilinear")
+	plt.axis("off")
+	plt.show()
 	# 保存到本地
 	wc.to_file("wordcloud.jpg")
+
+#hsl(hue, saturation, lightness)
+#Hue is a degree on the color wheel from 0 to 360. 0 is red, 120 is green, 240 is blue.
+#Saturation is a percentage value; 0% means a shade of gray and 100% is the full color.
+#Lightness is also a percentage; 0% is black, 100% is white.
+def color_setting(word, font_size, position, orientation, random_state=None, **kwargs):
+	return "hsl(15, %d%%, %d%%)" % (random.randint(60, 100), random.randint(0, 70))
 
 if __name__ == '__main__':
 	draw_wordcloud()
